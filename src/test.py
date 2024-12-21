@@ -67,7 +67,7 @@ def main():
     torch.backends.cudnn.benchmark = True
 
     # Evaluate on the test set
-    test_metrics = TestUtils.test_model(model, test_loader, DEVICE, num_classes)
+    test_metrics = TestUtils.test_model(model, dataset, test_loader, DEVICE, num_classes)
 
     # Print test metrics
     print_metrics("Test", test_metrics, num_classes)

@@ -7,7 +7,7 @@ import numpy as np
 
 class TestUtils:
     @staticmethod
-    def test_model(model, test_loader, device, num_classes):
+    def test_model(model, dataset, test_loader, device, num_classes):
         model.eval()
         y_true, y_pred = [], []
 
@@ -22,6 +22,7 @@ class TestUtils:
 
         metrics = TrainUtils.compute_metrics(y_true, y_pred, num_classes)
         confusion_matrix = TrainUtils.compute_confusion_matrix(y_true, y_pred, num_classes)
+        label_mapping = dataset['test'].features["label"].int2str
 
         print("\nTest Results:")
         for k, v in metrics.items():
@@ -33,7 +34,7 @@ class TestUtils:
 
         # Visualize the confusion matrix
         plt.figure(figsize=(8, 6))
-        sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=[f'Class {i}' for i in range(num_classes)], yticklabels=[f'Class {i}' for i in range(num_classes)])
+        sns.heatmap(confusion_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=[label_mapping(i) for i in range(num_classes)], yticklabels=[label_mapping(i) for i in range(num_classes)])
         plt.title("Confusion Matrix")
         plt.xlabel("Predicted Label")
         plt.ylabel("True Label")
