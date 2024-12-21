@@ -1,7 +1,11 @@
 from huggingface_hub import HfApi, HfFolder
+from credentials_utils import setup_huggingface_hub
 import os
 
 def push_to_hf(model_path, repo_id):
+    # Setup HuggingFace 
+    setup_huggingface_hub()
+
     api = HfApi()
     token = HfFolder.get_token()
     if not token:
