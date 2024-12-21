@@ -65,7 +65,7 @@ def main():
 
     # Dataset Preparation
     dataset = DatasetUtils.load_dataset()
-    dataset = DatasetUtils.remove_class(dataset, split="train", class=5) # remove ambigious class (class 5)
+    dataset = DatasetUtils.remove_class(dataset, split="train", class_label=5) # remove ambigious class (class 5)
     dataset = DatasetUtils.split_dataset(dataset, train_size=0.8, val_size=0.1, test_size=0.1)
 
     # create DataLoaders

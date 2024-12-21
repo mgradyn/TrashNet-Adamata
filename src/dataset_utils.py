@@ -140,7 +140,7 @@ class DatasetUtils:
         plt.show()
 
     @staticmethod
-    def remove_class(dataset, split, class):
+    def remove_class(dataset, split, class_label):
         dataset = dataset.sort("label")
 
         labels = dataset[split]["label"]
@@ -149,7 +149,7 @@ class DatasetUtils:
 
         indices_to_keep = []
         for idx in range(len(dataset[split]) - 1, -1, -1):
-            if dataset[split][idx]["label"] == class:
+            if dataset[split][idx]["label"] == class_label:
                 continue
             indices_to_keep = list(range(idx + 1))
             break
