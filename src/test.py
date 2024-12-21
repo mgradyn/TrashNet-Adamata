@@ -71,7 +71,5 @@ def main():
     # Print test metrics
     print_metrics("Test", test_metrics, num_classes)
 
-    print metrics  
-
 if __name__ == "__main__":
     main()
