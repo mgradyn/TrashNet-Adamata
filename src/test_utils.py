@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import seaborn as sns
+from train_utils import TrainUtils
 import numpy as np
 
 class TestUtils:
@@ -19,8 +20,8 @@ class TestUtils:
                 y_true.extend(labels.cpu().numpy())
                 y_pred.extend(preds.cpu().numpy())
 
-        metrics = compute_metrics(y_true, y_pred, num_classes)
-        confusion_matrix = compute_confusion_matrix(y_true, y_pred, num_classes)
+        metrics = TrainUtils.compute_metrics(y_true, y_pred, num_classes)
+        confusion_matrix = TrainUtils.compute_confusion_matrix(y_true, y_pred, num_classes)
 
         print("\nTest Results:")
         for k, v in metrics.items():
@@ -28,6 +29,7 @@ class TestUtils:
                 print(f"{k}: {v:.4f}")
 
         print("\nConfusion Matrix:")
+        print(confusion_matrix)
 
         # Visualize the confusion matrix
         plt.figure(figsize=(8, 6))

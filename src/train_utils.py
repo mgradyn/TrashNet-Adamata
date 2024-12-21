@@ -125,15 +125,15 @@ class TrainUtils:
 
             # Compute metrics for every 10 batch
             if (batch_idx + 1) % 10 == 0:
-                batch_metrics = compute_metrics(y_true[-len(labels):], preds.cpu().numpy(), num_classes)
+                batch_metrics = TrainUtils.compute_metrics(y_true[-len(labels):], preds.cpu().numpy(), num_classes)
                 print(f"[Train Batch {batch_idx + 1}/{len(train_loader)}] "
                       f"Loss: {loss.item():.4f} | "
                       f"Accuracy: {batch_metrics['accuracy']:.4f} | "
                       f"LR: {optimizer.param_groups[0]['lr']:.6f}")
 
         # Compute epoch-level metrics
-        metrics = compute_metrics(y_true, y_pred, num_classes)
-        confusion_matrix = compute_confusion_matrix(y_true, y_pred, num_classes)
+        metrics = TrainUtils.compute_metrics(y_true, y_pred, num_classes)
+        confusion_matrix = TrainUtils.compute_confusion_matrix(y_true, y_pred, num_classes)
 
         # Log metrics to wandb
         wandb.log({
@@ -175,14 +175,14 @@ class TrainUtils:
 
                 # Compute metrics for every 10 batch
                 if (batch_idx + 1) % 10 == 0:
-                    batch_metrics = compute_metrics(y_true[-len(labels):], preds.cpu().numpy(), num_classes)
+                    batch_metrics = TrainUtils.compute_metrics(y_true[-len(labels):], preds.cpu().numpy(), num_classes)
                     print(f"[Val Batch {batch_idx + 1}/{len(val_loader)}] "
                           f"Loss: {loss.item():.4f} | "
                           f"Accuracy: {batch_metrics['accuracy']:.4f}")
 
         # Compute epoch-level metrics
-        metrics = compute_metrics(y_true, y_pred, num_classes)
-        confusion_matrix = compute_confusion_matrix(y_true, y_pred, num_classes)
+        metrics = TrainUtils.compute_metrics(y_true, y_pred, num_classes)
+        confusion_matrix = TrainUtils.compute_confusion_matrix(y_true, y_pred, num_classes)
 
         # Log metrics to wandb
         wandb.log({
