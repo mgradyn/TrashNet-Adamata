@@ -14,11 +14,7 @@ jobs:
         with:
           python-version: "3.10.12"
       - name: Install dependencies
-        if: env.changed == 'true'
         run: |
           pip install huggingface_hub
       - name: Push Model to Hugging Face
-        if: env.changed == 'true'
-        env:
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
         run: python push_hf.py
