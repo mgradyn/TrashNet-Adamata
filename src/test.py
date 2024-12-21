@@ -52,8 +52,8 @@ def main():
     num_classes = len(class_counts)
 
     # Load model configuration and weights
-    config_path = "./config/model_cfg.json"
-    model_path = "./model/best_trashnet_model.pth"
+    config_path = os.path.join(os.path.dirname(__file__), "config", "model_cfg.json")
+    model_path = os.path.join(os.path.dirname(__file__), "model", "best_trashnet_model.pth")
     if not os.path.exists(config_path) or not os.path.exists(model_path):
         raise FileNotFoundError("Required configuration or model file is missing.")
 

@@ -30,4 +30,9 @@ class EarlyStopping:
         if self.verbose:
             print(f"Validation loss improved. Saving model to model/{self.path}")
 
-        torch.save(model.state_dict(), "./model/best_trashnet_model.pth")
+        model_dir = os.path.join(os.path.dirname(__file__), "model")
+        
+        os.makedirs(model_dir, exist_ok=True)
+        model_path = os.path.join(model_dir, self.path)
+        
+        torch.save(model.state_dict(), model_path)

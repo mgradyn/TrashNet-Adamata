@@ -18,6 +18,11 @@ VAL_BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
 
 def save_best_model(model, optimizer, scheduler, epoch, train_metrics, val_metrics):
+    model_dir = os.path.join(os.path.dirname(__file__), "model")
+    
+    # Ensure the directory exists
+    os.makedirs(model_dir, exist_ok=True)
+
     save_dict = {
         "epoch": epoch,
         "model_state_dict": model.state_dict(),
@@ -26,7 +31,8 @@ def save_best_model(model, optimizer, scheduler, epoch, train_metrics, val_metri
         "train_metrics": train_metrics,
         "val_metrics": val_metrics,
     }
-    torch.save(save_dict, "./model/best_trashnet_model.pth")
+    model_path = os.path.join(model_dir, "best_trashnet_model.pth")
+    torch.save(save_dict, model_path)
     print("\nSaved best model.")
 
 def print_metrics(phase, loss, metrics, num_classes):
@@ -78,7 +84,11 @@ def main():
     class_counts = Counter(dataset["train"]["label"])
     num_classes = len(class_counts)
 
-    with open("./config/model_cfg.json", "r") as f:
+    config_path = os.path.join(os.path.dirname(__file__), "config", "model_cfg.json")
+    if not os.path.exists(config_path):
+        raise FileNotFoundError("Required configuration file is missing.")
+
+    with open(config_path, "r") as f:
         cfg = json.load(f)
     model = TrashNet(cfgs=cfg["cfgs"], num_classes=num_classes, width=cfg["width"], dropout=cfg["dropout"]).to(DEVICE)
 
