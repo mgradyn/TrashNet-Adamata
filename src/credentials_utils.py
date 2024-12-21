@@ -10,6 +10,11 @@ if os.getenv("GITHUB_ACTIONS") is None:
 huggingface_token = os.getenv("HUGGINGFACE_TOKEN")
 wandb_key = os.getenv("WANDB_API_KEY")
 
+if not huggingface_token:
+    raise ValueError("HUGGINGFACE_TOKEN is not set. Ensure it is available in your environment.")
+if not wandb_key:
+    raise ValueError("WANDB_API_KEY is not set. Ensure it is available in your environment.")
+
 def setup_wandb(project_name, config):
     wandb.login(key=wandb_key)
     wandb.init(project=project_name, config=config)

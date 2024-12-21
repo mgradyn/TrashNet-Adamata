@@ -1,0 +1,39 @@
+name: Push to Hugging Face Hub
+on:
+  workflow_dispatch:  # Manual trigger
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check if Model is Updated
+        id: check_model
+        run: |
+          if [ ! -f src/model/best_trashnet_model.pth ]; then
+            echo "Model file does not exist."
+            exit 1
+          fi
+          # Fetch the latest changes from the main branch
+          git fetch origin main
+          # Compare the file with the latest commit on main
+          if git diff --quiet origin/main -- src/model/best_trashnet_model.pth; then
+            echo "Model file has not changed."
+            echo "changed=false" >> $GITHUB_ENV
+          else
+            echo "Model file has changed."
+            echo "changed=true" >> $GITHUB_ENV
+          fi
+      - name: Set up Python
+        if: env.changed == 'true'
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10.12'  # Added quotes around version number
+      - name: Install dependencies
+        if: env.changed == 'true'
+        run: |
+          pip install huggingface_hub
+      - name: Push Model to Hugging Face
+        if: env.changed == 'true'
+        env:
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        run: python push_hf.py
