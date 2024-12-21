@@ -1,0 +1,23 @@
+# Python version: 3.10.12
+
+# Python packages
+datasets==3.2.0
+huggingface-hub==0.27.0
+matplotlib==3.8.0
+matplotlib-inline==0.1.7
+matplotlib-venn==1.1.1
+numpy==1.26.4
+Pillow==11.0.0
+seaborn==0.13.2
+torchsummary==1.5.1
+wandb==0.19.1
+python_dotenv==1.0.1
+
+# PyTorch ecosystem (CUDA 12.1)
+torch @ https://download.pytorch.org/whl/cu121_full/torch-2.5.1%2Bcu121-cp310-cp310-linux_x86_64.whl
+torchvision @ https://download.pytorch.org/whl/cu121/torchvision-0.20.1%2Bcu121-cp310-cp310-linux_x86_64.whl
+torchaudio @ https://download.pytorch.org/whl/cu121/torchaudio-2.5.1%2Bcu121-cp310-cp310-linux_x86_64.whl
+
+# NVIDIA CUDA packages
+cuda-python==12.2.1
+cudf-cu12 @ https://pypi.nvidia.com/cudf-cu12/cudf_cu12-24.10.1-cp310-cp310-manylinux_2_24_x86_64.whl
