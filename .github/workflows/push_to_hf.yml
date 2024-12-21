@@ -17,4 +17,4 @@ jobs:
         run: |
           pip install huggingface_hub
       - name: Push Model to Hugging Face
-        run: python push_hf.py
+        run: python src/push_hf.py
