@@ -10,10 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
-        if: env.changed == 'true'
         uses: actions/setup-python@v3
         with:
-          python-version: "3.10.12" # Added quotes around version number
+          python-version: "3.10.12"
       - name: Install dependencies
         if: env.changed == 'true'
         run: |
