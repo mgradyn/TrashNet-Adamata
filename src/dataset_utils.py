@@ -232,7 +232,7 @@ class DatasetUtils:
     
     @staticmethod
     def create_dataloaders(dataset, train_transform, val_test_transform, train_batch_size=64, val_batch_size=32, test_batch_size=32, num_workers=2):
-        train_loader = dataset_to_dataloader(
+        train_loader = DatasetUtils.dataset_to_dataloader(
             dataset["train"],
             train_transform,
             batch_size=train_batch_size,
@@ -242,7 +242,7 @@ class DatasetUtils:
             persistent_workers=True
         )
 
-        val_loader = dataset_to_dataloader(
+        val_loader = DatasetUtils.dataset_to_dataloader(
             dataset["validation"],
             val_test_transform,
             batch_size=val_batch_size,
@@ -251,7 +251,7 @@ class DatasetUtils:
             pin_memory=True
         )
 
-        test_loader = dataset_to_dataloader(
+        test_loader = DatasetUtils.dataset_to_dataloader(
             dataset["test"],
             val_test_transform,
             batch_size=test_batch_size,
