@@ -16,5 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install huggingface_hub
+          pip install wandb
+          pip install python_dotenv
       - name: Push Model to Hugging Face
         run: python src/push_to_hf.py

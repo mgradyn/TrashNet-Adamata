@@ -151,16 +151,16 @@ class LightBottleneck(nn.Module):
 
         return x + self.shortcut(residual)
 
-    def _make_divisible(v, divisor, min_value=None):
-        min_value = min_value or divisor
-        half_divisor = divisor / 2
+def _make_divisible(v, divisor, min_value=None):
+    min_value = min_value or divisor
+    half_divisor = divisor / 2
 
-        new_v = max(min_value, int(v + half_divisor) - (int(v + half_divisor) % divisor))
+    new_v = max(min_value, int(v + half_divisor) - (int(v + half_divisor) % divisor))
 
-        # to avoid significant reduction in value
-        if new_v < (v * 0.9):
-            new_v += divisor
-        return new_v
+    # to avoid significant reduction in value
+    if new_v < (v * 0.9):
+        new_v += divisor
+    return new_v
 
 class TrashNet(nn.Module):
     """
