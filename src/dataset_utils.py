@@ -119,7 +119,7 @@ class DatasetUtils:
             print("Warning: Not enough images found for the specified class.")
             num_images = len(target_indices)
 
-        random_indices = sample(target_indices, num_images)
+        random_indices = random.sample(target_indices, num_images)
 
         cols = 3
         rows = (num_images + cols - 1) // cols
