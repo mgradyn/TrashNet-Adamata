@@ -21,6 +21,7 @@ def push_to_hf(model_path, repo_id):
     print(f"Model pushed to Hugging Face: {repo_id}")
 
 if __name__ == "__main__":
-    model_path = "./model/trashnet_model.pth"
+    model_dir = os.path.join(os.path.dirname(__file__), "model")
+    model_path = os.path.join(model_dir, "best_trashnet_model.pth")
     repo_id = "grediiiii/trashnet-adamata"
     push_to_hf(model_path, repo_id)
