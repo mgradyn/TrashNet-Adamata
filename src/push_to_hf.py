@@ -11,6 +11,15 @@ def push_to_hf(model_path, repo_id):
     if not token:
         raise ValueError("Hugging Face token not found. Ensure you are logged in.")
 
+    # Check if the repository exists; if not, create it
+    try:
+        api.repo_info(repo_id, repo_type="model")
+        print(f"Repository '{repo_id}' already exists.")
+    except Exception as e:
+        print(f"Repository '{repo_id}' does not exist. Creating...")
+        api.create_repo(repo_id=repo_id, repo_type="model", exist_ok=True)
+        print("Repository created successfully!")
+
     # Upload model to the Hub
     api.upload_file(
         path_or_fileobj=model_path,
