@@ -1,3 +1,5 @@
+import torch
+from torch.utils.data import Dataset, DataLoader
 from datasets import load_dataset
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -136,3 +138,126 @@ class DatasetUtils:
 
         plt.tight_layout()
         plt.show()
+
+    @staticmethod
+    def remove_class(dataset, split, class):
+        dataset = dataset.sort("label")
+
+        labels = dataset[split]["label"]
+        class_counts = Counter(labels)
+        print(f"Class distribution (Before): {class_counts}")
+
+        indices_to_keep = []
+        for idx in range(len(dataset[split]) - 1, -1, -1):
+            if dataset[split][idx]["label"] == class:
+                continue
+            indices_to_keep = list(range(idx + 1))
+            break
+        dataset[split] = dataset[split].select(indices_to_keep)
+
+        labels = dataset[split]["label"]
+        class_counts = Counter(labels)
+        print(f"Class distribution (After): {class_counts}")
+
+        return dataset
+
+    @staticmethod
+    def split_dataset(dataset, seed=42):
+        # Split dataset into train (70%), validation (15%), and test (15%)
+        train_test_valid_split = dataset["train"].train_test_split(test_size=0.3, seed=seed)
+        validation_test_split = train_test_valid_split["test"].train_test_split(test_size=0.5, seed=seed)
+
+        # Assign to respective splits
+        dataset["train"] = train_test_valid_split["train"]
+        dataset["validation"] = validation_test_split["train"]
+        dataset["test"] = validation_test_split["test"]
+
+        print(f"Train Dataset: {len(dataset['train'])} samples")
+        print(f"Validation Dataset: {len(dataset['validation'])} samples")
+        print(f"Test Dataset: {len(dataset['test'])} samples")
+
+        return dataset
+
+    @staticmethod
+    def get_transforms():
+        train_transform = transforms.Compose([
+            transforms.Resize((224, 224)),  # Resize to 224x224 (since image sizes are not uniform)
+
+            # Data augmentation to improve model generalization and robustness
+            transforms.RandomApply([
+                transforms.RandomHorizontalFlip(p=0.5),
+                transforms.RandomRotation(15),
+                transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)
+            ], p=0.5),
+
+            transforms.ToTensor(),  # Convert to PyTorch tensor
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize to [-1, 1], range suitable for the model (in this case std deviation of 1)
+        ])
+
+
+        val_test_transform = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        ])
+
+        return train_transform, val_test_transform
+
+    @staticmethod
+    def dataset_to_dataloader(dataset, transform, batch_size=32, shuffle=False, num_workers=4, pin_memory=True, persistent_workers=True):
+        class HuggingFaceDataset(Dataset):
+            def __init__(self, dataset, transform):
+                self.dataset = dataset
+                self.transform = transform
+
+            def __len__(self):
+                return len(self.dataset)
+
+            def __getitem__(self, idx):
+                item = self.dataset[idx]
+                image = item["image"]
+                label = item["label"]
+                image = self.transform(image)
+                return image, label
+
+        return DataLoader(
+            HuggingFaceDataset(dataset, transform),
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+            prefetch_factor=4,
+        )
+    
+    @staticmethod
+    def create_dataloaders(dataset, train_transform, val_test_transform, train_batch_size=64, val_batch_size=32, test_batch_size=32, num_workers=2):
+        train_loader = dataset_to_dataloader(
+            dataset["train"],
+            train_transform,
+            batch_size=train_batch_size,
+            shuffle=True,
+            num_workers=num_workers,
+            pin_memory=True,
+            persistent_workers=True
+        )
+
+        val_loader = dataset_to_dataloader(
+            dataset["validation"],
+            val_test_transform,
+            batch_size=val_batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=True
+        )
+
+        test_loader = dataset_to_dataloader(
+            dataset["test"],
+            val_test_transform,
+            batch_size=test_batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=True
+        )
+
+        return train_loader, val_loader, test_loader
